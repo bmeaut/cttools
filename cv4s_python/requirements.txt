@@ -1,0 +1,15 @@
+fastapi-camelcase
+fastapi
+uvicorn
+numpy
+matplotlib
+opencv-python
+requests
+
+# dev packages
+pytest
+black
+isort
+
+trimesh
+scikit-image

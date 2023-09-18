@@ -1,0 +1,10 @@
+[
+    {
+        "name": "A",
+        "type": "float"
+    },
+    {
+        "name": "B",
+        "type": "float"
+    }
+]

@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="Core.Interfaces.Image.IBlob">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Image\IBlob.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Tags" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Image.IBlobImage">
+    <Position X="9.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Image\IBlobImage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Blobs" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Image.IRawImage">
+    <Position X="12.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Interfaces\Image\IRawImage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="BlogImages" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Image.ITag&lt;T&gt;">
+    <Position X="6.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Interfaces\Image\ITag.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Core.Interfaces.Operation.IArtifact">
+    <Position X="7" Y="9" Width="1.5" />
+    <AssociationLine Name="BlobImageChangeSet" Type="Core.Interfaces.Image.IBlobImage" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.875" Y="9" />
+        <Point X="7.888" Y="9" />
+        <Point X="7.888" Y="6.43" />
+        <Point X="10.125" Y="6.43" />
+        <Point X="10.125" Y="5.118" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Interfaces\Operation\IArtifact.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="BlobImageChangeSet" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Operation.IInternalOutput">
+    <Position X="8.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Operation\IInternalOutput.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Core.Interfaces.Operation.IOperation">
+    <Position X="8.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Interfaces\Operation\IOperation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Core.Interfaces.Operation.IOperationContext">
+    <Position X="10.5" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Operation\IOperationContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OperationProperties" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Artifacts" />
+      <Property Name="InternalOutputs" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Operation.IPlugin">
+    <Position X="10.25" Y="6" Width="1.5" />
+    <AssociationLine Name="Operation" Type="Core.Interfaces.Operation.IOperation" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.844" Y="6.868" />
+        <Point X="10.844" Y="8.188" />
+        <Point X="10" Y="8.188" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Operation\IPlugin.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Operation" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.IMaterialSample">
+    <Position X="17.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAgQAAAEAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\IMaterialSample.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MaterialScan" />
+      <Property Name="Status" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Measurements" />
+      <Property Name="UserGeneratedFiles" />
+      <Property Name="RawImages" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.IMaterialScan">
+    <Position X="20.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\IMaterialScan.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.IMeasurement">
+    <Position X="17.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\IMeasurement.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="OperationContexts" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.ISessionContext">
+    <Position X="16.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\ISessionContext.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ActiveWorkspace" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.IStatus">
+    <Position X="14.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\IStatus.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.ITemplate&lt;T&gt;">
+    <Position X="13.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\ITemplate.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.IUserGeneratedFile">
+    <Position X="20.5" Y="6.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\IUserGeneratedFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Core.Interfaces.Workspace.IWorkspace">
+    <Position X="14.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAIAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Workspace\IWorkspace.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Status" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="MaterialSamples" />
+      <Property Name="Plugins" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="Core.Interfaces.Operation.IOperationProperties">
+    <Position X="11.5" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Operation\IOperationProperties.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

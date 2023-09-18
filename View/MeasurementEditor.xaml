@@ -1,0 +1,357 @@
+﻿<RibbonWindow x:Class="View.MeasurementEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:View"
+        xmlns:dd="urn:gong-wpf-dragdrop" xmlns:converters="clr-namespace:View.Converters"
+              mc:Ignorable="d"
+        Title="MeasurementEditor" Height="720" Width="1280" Loaded="Window_Loaded">
+
+    <Grid>
+        <Grid.Resources>
+            <converters:HistoryToViewConverter x:Key="HistoryToViewConverter" />
+            <converters:HistoryToBackgroundConverter x:Key="HistoryToBackgroundConverter" />
+            <converters:OperationSequenceStateToColorConverter x:Key="StateToColorConverter" />
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.Children>
+            <!-- https://github.com/fluentribbon/Fluent.Ribbon -->
+            <Ribbon x:Name="RibbonWin" SelectedIndex="0" Grid.Row="0" Grid.ColumnSpan="2">
+                <!--Help Pane, located at the right-hand side-->
+                <Ribbon.HelpPaneContent>
+                    <RibbonButton />
+                </Ribbon.HelpPaneContent>
+                <!--Quick Access Toolbar - located at the upper-left corner-->
+                <Ribbon.QuickAccessToolBar>
+                    <RibbonQuickAccessToolBar>
+                        <RibbonButton x:Name ="Save"/>
+                        <RibbonSplitButton x:Name ="Undo">
+                            <RibbonSplitMenuItem Header="Undo 1" />
+                            <RibbonSplitMenuItem Header="Undo 2" />
+                            <RibbonSplitMenuItem Header="Undo 3" />
+                        </RibbonSplitButton>
+                        <RibbonSplitButton x:Name="Redo" >
+                            <RibbonSplitMenuItem Header="Redo 1" />
+                            <RibbonSplitMenuItem Header="Redo 2" />
+                        </RibbonSplitButton>
+                    </RibbonQuickAccessToolBar>
+                </Ribbon.QuickAccessToolBar>
+                <!-- Application Menu, located at the left-hand side (down arrow) -->
+                <Ribbon.ApplicationMenu>
+                    <RibbonApplicationMenu KeyTip="F">
+                        <RibbonApplicationMenuItem Name="OptionsRibbonMI" Header="Options" Click="OptionsRibbonMI_Click"/>
+                        <RibbonApplicationMenuItem Name="ExitRibbonMI" Header="Exit" Click="ExitRibbonMI_Click"/>
+                    </RibbonApplicationMenu>
+                </Ribbon.ApplicationMenu>
+                <!-- Ribbon Tab #1: Home -->
+                <RibbonTab Header="Home" KeyTip="H" >
+                    <RibbonGroup Header="Layers">
+                        <DockPanel VerticalAlignment="Center">
+                            <Label Content="{Binding SelectedLayerInMmText, Mode=OneWay}"
+                                DockPanel.Dock="Right" Width="60" />
+                            <Slider x:Name="SelectedLayer" Value="{Binding SelectedLayer}" Minimum="0" Maximum="{Binding NumberOfLayers}" TickPlacement="BottomRight" MinWidth="150px" Margin="0, 0, 10, 0"/>
+                        </DockPanel>
+                    </RibbonGroup>
+
+                    <RibbonGroup Header="Operations">
+                        <ComboBox ItemsSource="{Binding Operations}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedOperation}"/>
+                    </RibbonGroup>
+
+                    <RibbonGroup x:Name="UndoRedo" Header="Undo and Redo">
+                        <RibbonButton Label="Undo" KeyTip="X" IsEnabled="{Binding IsOperationNotRunning}" Click="RibbonButton_Undo"/>
+                        <RibbonButton Label="Redo" KeyTip="C" IsEnabled="{Binding IsOperationNotRunning}" Click="RibbonButton_Redo"/>
+                    </RibbonGroup>
+
+                    <RibbonGroup x:Name="Session" Header="Session">
+                        <RibbonButton x:Name="SaveSessionButton" Label="Save session" Click="SaveSessionButton_Click" />
+                    </RibbonGroup>
+                    <RibbonGroup x:Name="Other" Header="Other">
+                        <RibbonButton x:Name="OpenMeasurementsButton" Label="Open outputs" Click="OpenMeasurementsButton_Click" />
+                        <RibbonButton x:Name="OpenMeasurementCloningButton" Label="Clone measurements" Click="OpenMeasurementCloningButton_Click" />
+                    </RibbonGroup>
+                    <RibbonGroup x:Name="DrawSettings" Header="DrawSettings" Width="120">
+                        <ComboBox ItemsSource="{Binding OperationDrawStyles}" SelectedItem="{Binding SelectedOperationDrawStyle}" Width="100"></ComboBox>
+                        <Button x:Name="InfoButton"  Margin="0,10,10,10" Background="Transparent" BorderThickness="0" Click="InfoButton_Click">
+                            <Button.Content>
+                                <Image Source="/Resources/help_icon.png" Width="20" Height="20"/>
+                            </Button.Content>
+                            <Button.ToolTip>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold" FontSize="14" Margin="0,0,0,5">Keyboard commands:</TextBlock>
+                                    <TextBlock>
+                                        Change layer: Mousewheel
+                                        <LineBreak />
+                                        Zoom in/out: CTRL + Mousewheel
+                                        <LineBreak />
+                                        Appearances: "0-5"
+                                        <LineBreak />
+                                        Hide actual: "H"
+                                        <LineBreak />
+                                    </TextBlock>
+                                    <!-- <Border BorderBrush="Silver" BorderThickness="0,1,0,0" Margin="0,8" /> -->
+                                    <WrapPanel>
+                                        <Image Source="/help_icon3.png" Width="20" Height="20"/>
+                                        <TextBlock FontStyle="Italic">Press for more help</TextBlock>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Button.ToolTip>
+                        </Button>
+                    </RibbonGroup>
+                    <RibbonGroup x:Name="DicomSettings" Header="Dicom Settings" Visibility="{Binding Path=DicomSettingsVisible, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Level:" Width="45"/>
+                                <Slider x:Name="LevelSlider" Value="{Binding DicomLevelValue}" Minimum="0" Maximum="4000" TickPlacement="BottomRight" MinWidth="150px" Margin="10, 0, 10, 0"/>
+                                <xctk:IntegerUpDown Value="{Binding DicomLevelValue}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                                <Label Content="Range:" Width="45"/>
+                                <Slider x:Name="RangeSlider" Value="{Binding DicomRangeValue}" Minimum="0" Maximum="4000" TickPlacement="BottomRight" MinWidth="150px" Margin="10, 0, 10, 0"/>
+                                <xctk:IntegerUpDown Value="{Binding DicomRangeValue}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </RibbonGroup>
+                    <RibbonGroup x:Name="PixelInfoSettings" Header="Pixel information settings">
+                        <RibbonToggleButton x:Name="ShowCoordinatesButton" Label="Show coordinates" IsChecked="{Binding Mode=TwoWay, Path=ShowCoordinates}"/>
+                        <RibbonToggleButton x:Name="ShowBlobInfoButton" Label="Show blob information" IsChecked="{Binding Mode=TwoWay, Path=ShowBlobPixelInfo}"/>
+                        <RibbonToggleButton x:Name="ShowRawValuesButton" Label="Show raw values" IsChecked="{Binding Mode=TwoWay, Path=ShowRawPixelValues}"/>
+                    </RibbonGroup>
+                </RibbonTab>
+            </Ribbon>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width=".3*"/>
+                </Grid.ColumnDefinitions>
+
+                <local:DrawableMeasurementView Grid.Column="0" x:Name="Canvas">
+                    <local:DrawableMeasurementView.InkCanvasBackground>
+                        <ImageBrush ImageSource="{Binding Background}" Stretch="None"/>
+                    </local:DrawableMeasurementView.InkCanvasBackground>
+                </local:DrawableMeasurementView>
+
+                <GridSplitter Grid.Row="0" Grid.Column="1" Margin="2,0,2,0"
+                  Width="3" Background="Blue" 
+                  VerticalAlignment="Stretch" 
+                  HorizontalAlignment="Center" />
+
+                <Grid Background="LightSlateGray" Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+
+                    <TabControl Grid.Row="0"
+                                TabStripPlacement="Bottom"
+                                x:Name="OperationTabControl"
+                                dd:DragDrop.IsDragSource="True"
+                                dd:DragDrop.IsDropTarget="True"
+                                dd:DragDrop.DropHandler="{Binding DropTargetForTabControl}">
+                        <TabItem Header="Operation Properties">
+                            <!-- https://github.com/xceedsoftware/wpftoolkit/wiki/PropertyGrid -->
+                            <!--<DataGrid Width="auto">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Width="*"/>
+                                    <DataGridTextColumn Header="Value" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>-->
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <xctk:PropertyGrid Grid.Row="0" AutoGenerateProperties="True" SelectedObject="{Binding OpProperties, Mode=TwoWay}" PropertyValueChanged="PropertyGrid_PropertyValueChanged" IsReadOnly="False"/>
+                                <Button Grid.Row="1" Margin="4,4,4,0" x:Name="RunOperation" Click="RunOperation_Click" IsEnabled="{Binding IsOperationCallableFromButton, FallbackValue=true}" Content="{Binding RunOperationButtonContent, FallbackValue=Run operation}"></Button>
+                                <Button Grid.Row="2" Margin="4,4,4,4" x:Name="AddToSequence" Click="AddToSequence_Click">Add to sequence</Button>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Blob Tags">
+                            <!-- https://github.com/xceedsoftware/wpftoolkit/wiki/PropertyGrid -->
+                            <DataGrid Width="auto"
+                                      x:Name="TagsDataGrid"
+                                      AutoGenerateColumns="False"
+                                      ItemsSource="{Binding PixelInformation.Tags}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Value" Width="*" Binding="{Binding Value}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                    </TabControl>
+
+                    <GridSplitter Grid.Row="1" Margin="0,2,0,2"
+                    Height="3" Background="Blue" 
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Center" />
+
+                    <TabControl Grid.Row="2"
+                                TabStripPlacement="Bottom"
+                                dd:DragDrop.IsDragSource="True"
+                                dd:DragDrop.IsDropTarget="True"
+                                dd:DragDrop.DropHandler="{Binding DropTargetForTabControl}">
+
+                        <TabItem Header="Operation Sequence">
+                            <ListView ItemsSource="{Binding OperationSequence, Mode=TwoWay}" 
+                              x:Name="OperationSequenceListView"
+                              dd:DragDrop.IsDragSource="{Binding Path=OperationSequence.AllowOperationSequenceReordering}"
+                              dd:DragDrop.IsDropTarget="{Binding Path=OperationSequence.AllowOperationSequenceReordering}">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
+                                        <EventSetter Event="PreviewMouseLeftButtonUp" Handler="ListViewItem_PreviewMouseLeftButtonUp" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Red" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                            <StackPanel.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Run" Click="RunOperationMenuItem_Click"/>
+                                                    <MenuItem Header="Delete" Click="DeleteOperationMenuItem_Click"/>
+                                                </ContextMenu>
+                                            </StackPanel.ContextMenu>
+                                            <Rectangle Fill="{Binding Path=State, Converter={StaticResource StateToColorConverter}}" 
+                                               Width="10" Height="10" Margin="0,0,5,0"
+                                               RadiusX="5" RadiusY="5"/>
+                                            <TextBlock Text="{Binding Path=OperationContext.OperationName}" 
+                                               FontWeight="Bold" Padding="0, 10px"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </TabItem>
+                    </TabControl>
+
+                    <GridSplitter Grid.Row="3" Margin="0,2,0,2"
+                    Height="3" Background="Blue" 
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Center" />
+
+                    <TabControl Grid.Row="4"
+                                TabStripPlacement="Bottom"
+                                dd:DragDrop.IsDragSource="True"
+                                dd:DragDrop.IsDropTarget="True"
+                                dd:DragDrop.DropHandler="{Binding DropTargetForTabControl}">
+                        <TabItem Header="Operation History">
+                            <ListView DataContext="{Binding Path=HList}" ItemsSource="{Binding Path=History}">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Background" Value="{Binding Path=IsCurrent, Converter={StaticResource HistoryToBackgroundConverter}}"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Red" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel HorizontalAlignment="Stretch">
+                                            <TextBlock Text="{Binding Path=DisplayName}" 
+                                                       Foreground="{Binding Path=IsActive, Converter={StaticResource HistoryToViewConverter}}"
+                                                       FontWeight="Bold" Padding="0, 10px"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                        </TabItem>
+                        <!--
+                        <TabItem Header="Operation Log">
+
+                        </TabItem>
+                        -->
+                    </TabControl>
+
+                </Grid>
+
+            </Grid>
+
+            <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
+                <StatusBar DockPanel.Dock="Bottom">
+                    <StatusBar.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </ItemsPanelTemplate>
+                    </StatusBar.ItemsPanel>
+                    <StatusBarItem>
+                        <TextBlock Name="lblCursorPosition" />
+                    </StatusBarItem>
+                    
+                    <Separator Grid.Column="1" />
+                    <StatusBarItem Grid.Column="2">
+                        <TextBlock Text="Appearance:" HorizontalAlignment="Center"/>
+                    </StatusBarItem>
+                    <StatusBarItem Grid.Column="3">
+                        <TextBlock Text="{Binding Path=CurrentAppearance, FallbackValue='1'}" HorizontalAlignment="Center"/>
+                    </StatusBarItem>
+                    <Separator Grid.Column="4" />
+                    <StatusBarItem Grid.Column="5">
+                        <TextBlock Text="{Binding Path=CurrentLayerFilePath, FallbackValue='C:\\path\\of\\current\\file.txt'}" />
+                    </StatusBarItem>
+                    <Separator Grid.Column="6" />
+                    <StatusBarItem Grid.Column="7">
+                        <ProgressBar Width="90" Height="16" Value="{Binding Path=ProgressBarValue}"  IsIndeterminate="{Binding Path=ProgressBarIndeterminate}" />
+                    </StatusBarItem>
+                    <StatusBarItem Grid.Column="8">
+                        <Button Name="CancelOperationButton"  Content="" Height="15" Width="15" Visibility="{Binding Path=CancelButtonVisibility, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}" Click="CancelOperationButton_Click">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Background" Value="Red" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="DarkRed" TargetName="Border" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StatusBarItem>
+
+                </StatusBar>
+            </StatusBar>
+        </Grid.Children>
+    </Grid>
+</RibbonWindow>

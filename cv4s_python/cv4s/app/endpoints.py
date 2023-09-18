@@ -1,0 +1,4 @@
+DEMO_OPERATION_RUN_ENDPOINT = "/runDemoOperation"
+DEMO_OPERATION_CANCEL_ENDPOINT = "/cancelDemoOperation"
+CREATE_TEST_CONTEXT_ENDPOINT = "/createContext"
+EXPORT_ENDPOINT = "/export_stl"
