@@ -1,0 +1,105 @@
+﻿<Window x:Class="Cv4s.UI.View.MeasurementEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Cv4s.UI.View" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="MeasurementEditor" Height="450" Width="800"
+        Loaded="Window_Loaded"
+        Background="LightGray"
+        Name="MeasurementEditorWindow">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.Children>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.Children>
+
+                    <local:DrawableCanvas x:Name="DrawableCanvas" Grid.Column="0">
+                        <local:DrawableCanvas.InkCanvasBackground>
+                            <ImageBrush ImageSource="{Binding Background, Mode=TwoWay}" Stretch="None"/>
+                        </local:DrawableCanvas.InkCanvasBackground>
+                    </local:DrawableCanvas>
+
+                    <!--<Label Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">Idejön majd a drawablemeasurement a drawing settingssel</Label>-->
+
+                    <GridSplitter Grid.Row="0" Grid.Column="1" Margin="2,0,2,0"
+                      Width="3" Background="DarkGray" 
+                      VerticalAlignment="Stretch" 
+                      HorizontalAlignment="Center" />
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.Children>
+
+                            <Label Grid.Row="0">Ide jon majd a DICOM settings</Label>
+
+                            <GridSplitter Grid.Row="1" Margin="0,2,0,2"
+                                            Height="2" Background="DarkGray" 
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Center" />
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <ToggleButton Grid.Row="0" Content="Show coordinates" Background="LightGray" IsChecked="{Binding Mode=TwoWay, Path=ShowCoordinates}"/>
+                                <ToggleButton Grid.Row="1" Content="Show blob information" Background="LightGray" IsChecked="{Binding Mode=TwoWay, Path=ShowBlobPixelInfo}"/>
+                                <ToggleButton Grid.Row="2" Content="Show raw values" Background="LightGray" IsChecked="{Binding Mode=TwoWay, Path=ShowRawPixelValues}"/>
+                            </Grid>
+
+                            <GridSplitter Grid.Row="3" Margin="0,2,0,2"
+                                            Height="2" Background="DarkGray" 
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Center" />
+
+                            <xctk:PropertyGrid Grid.Row="4" AutoGenerateProperties="True" SelectedObject="{Binding OperationProperties, Mode=TwoWay}" IsReadOnly="False"/>
+
+                            <GridSplitter Grid.Row="5" Margin="0,2,0,2"
+                                            Height="2" Background="DarkGray" 
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Center" />
+                            <Grid Grid.Row="6">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.Children>
+                                    <Button Grid.Row="0" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="2 2 2 2" Click="CancelButton_Click" >Cancel</Button>
+                                    <Button Grid.Row="1" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="2 2 2 2" Click="SaveButton_Click" IsEnabled="{Binding IsOperationCallableFromButton, FallbackValue=true}" Content="{Binding RunOperationButtonContent, FallbackValue=Save}" />
+                                </Grid.Children>
+                            </Grid>
+
+                        </Grid.Children>
+                    </Grid>
+                </Grid.Children>
+            </Grid>
+
+            <StatusBar Grid.Row="1">
+
+            </StatusBar>
+        </Grid.Children>
+    </Grid>
+</Window>
